@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>28-maktab tekshirivi</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+  <div class="logo">28</div>
+  <h2>28-sonli umumta’lim maktabi</h2>
+  <p>📋 Kunlik tekshiruv</p>
+</div>
+
+<div class="card date-box">
+  <b>Sana:</b>
+  <input type="date" id="date">
+</div>
+
+<div id="sinflar"></div>
+
+<button onclick="send()">📤 Maʼlumotni saqlash</button>
+
+</div>
+
+<script>
+const sinflar=[5,6,7,8,9,10,11];
+const box=document.getElementById("sinflar");
+
+sinflar.forEach(s=>{
+  box.innerHTML+=`
+  <div class="card sinf">
+    <div class="sinf-title">${s}-sinf</div>
+    <div class="options">
+      <label><input type="radio" name="s${s}" value="bor" checked> Hamma bor</label>
+      <label><input type="radio" name="s${s}" value="yoq"> Yo‘q</label>
+    </div>
+    <input type="text" id="i${s}" placeholder="Ism familiya">
+  </div>`;
+});
+
+document.addEventListener("change",e=>{
+  if(!e.target.name) return;
+  const s=e.target.name.slice(1);
+  const i=document.getElementById("i"+s);
+  i.style.display=e.target.value==="yoq"?"block":"none";
+});
+
+function send(){
+  const sana=date.value;
+  if(!sana) return alert("Sanani tanlang");
+  let data={};
+  sinflar.forEach(s=>{
+    const v=document.querySelector(`input[name="s${s}"]:checked`).value;
+    data[s]=v==="bor"?"Hamma bor":document.getElementById("i"+s).value;
+  });
+  localStorage.setItem(sana,JSON.stringify(data));
+  location.href="admin.html";
+}
+</script>
+
+</body>
+</html>

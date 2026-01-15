@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin panel — 28-maktab</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+  <div class="logo">28</div>
+  <h2>Admin panel</h2>
+  <p>📊 Saqlangan maʼlumotlar</p>
+</div>
+
+<div class="card">
+  <h3>📅 Sanalar</h3>
+  <div id="dates"></div>
+</div>
+
+<div class="card">
+  <h3>📄 Batafsil maʼlumot</h3>
+  <pre id="info">Sanani tanlang</pre>
+  <div class="actions" id="actions" style="display:none;">
+    <button class="btn-del" onclick="deleteDay()">🗑 O‘chirish</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const datesBox=document.getElementById("dates");
+const info=document.getElementById("info");
+const actions=document.getElementById("actions");
+let current=null;
+
+function loadDates(){
+  datesBox.innerHTML="";
+  if(localStorage.length===0){
+    datesBox.innerHTML="<p>Maʼlumot yo‘q</p>";
+    return;
+  }
+  let keys=[];
+  for(let i=0;i<localStorage.length;i++) keys.push(localStorage.key(i));
+  keys.sort((a,b)=>new Date(b)-new Date(a));
+  keys.forEach(k=>{
+    datesBox.innerHTML+=`
+      <div class="date" onclick="show('${k}')">
+        <span>${k}</span>
+        <span class="badge">Ko‘rish</span>
+      </div>`;
+  });
+}
+
+function show(k){
+  current=k;
+  const data=JSON.parse(localStorage.getItem(k));
+  let out=`📅 Sana: ${k}\n\n`;
+  for(let s in data) out+=`${s}-sinf → ${data[s]}\n`;
+  info.innerText=out;
+  actions.style.display="block";
+}
+
+function deleteDay(){
+  if(confirm("Maʼlumot o‘chirilsinmi?")){
+    localStorage.removeItem(current);
+    current=null;
+    info.innerText="O‘chirildi";
+    actions.style.display="none";
+    loadDates();
+  }
+}
+
+loadDates();
+</script>
+
+</body>
+</html>
